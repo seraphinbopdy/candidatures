@@ -1,0 +1,18 @@
+# Fichiers que Git ne doit jamais envoyer sur GitHub
+
+# Secrets
+.env
+jenkins/.env
+
+# Code compilé par Maven (regénéré à chaque build)
+target/
+
+# Rapports de tests récupérés par Jenkins
+rapports/
+
+# Éditeurs et systèmes
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db

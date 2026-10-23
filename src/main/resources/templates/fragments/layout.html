@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<!-- Morceaux réutilisés par toutes les pages (en-tête HTML et barre du haut). -->
+
+<head th:fragment="head(titre)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titre} + ' · Suivi de candidatures'">Suivi de candidatures</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<header th:fragment="entete" class="entete">
+    <div class="entete-contenu">
+        <a class="logo" th:href="@{/candidatures}">
+            <span class="logo-marque" aria-hidden="true">◆</span>
+            Suivi de candidatures
+        </a>
+        <span class="entete-sous-titre">Recherche d'emploi DevOps</span>
+    </div>
+</header>
+
+<footer th:fragment="pied" class="pied">
+    Spring Boot · PostgreSQL · Docker
+</footer>
+</body>
+</html>

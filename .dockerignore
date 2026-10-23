@@ -1,0 +1,9 @@
+# Fichiers que Docker n'envoie pas dans l'image : plus rapide, et aucun secret dans l'image
+.git
+.env
+target
+rapports
+jenkins
+*.md
+.idea
+.vscode

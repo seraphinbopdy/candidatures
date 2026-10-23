@@ -1,0 +1,3 @@
+# Fins de ligne Linux pour tout le projet, même si tu édites sous Windows :
+# évite les erreurs "bad interpreter" et les fichiers YAML mal lus sur le VPS.
+* text=auto eol=lf

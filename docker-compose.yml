@@ -1,0 +1,38 @@
+# Lancement en LOCAL sur ton PC : docker compose up --build
+# Puis ouvre http://localhost:8080
+# Les variables ${...} viennent du fichier .env (copié depuis .env.template).
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # les données survivent au redémarrage des conteneurs
+    ports:
+      - "5432:5432"                        # pratique en local pour ouvrir la base avec DBeaver
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    image: candidatures:local
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy        # attend que PostgreSQL soit prêt avant de démarrer
+
+volumes:
+  pgdata:

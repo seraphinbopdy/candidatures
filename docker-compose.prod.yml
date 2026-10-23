@@ -1,0 +1,58 @@
+# PRODUCTION sur le VPS Contabo.
+#   Premier déploiement à la main : docker compose -f docker-compose.prod.yml up -d --build
+#   Ensuite c'est Jenkins qui déploie (voir Jenkinsfile).
+#
+# Le nom de projet est fixé : que le déploiement vienne de toi ou de Jenkins,
+# ce sont les mêmes conteneurs et le même volume de données qui sont utilisés.
+name: candidatures
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans le fichier .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Aucun port publié : la base n'est joignable que par l'application, jamais depuis Internet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    image: candidatures:${IMAGE_TAG:-latest}  # Jenkins fixe IMAGE_TAG = numéro du build
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+    # Pas de port publié non plus : seul Caddy reçoit le trafic d'Internet
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?DOMAIN manquant dans le fichier .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"                    # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data                 # les certificats HTTPS sont conservés ici
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

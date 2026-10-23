@@ -1,0 +1,17 @@
+# Caddy reçoit tout le trafic d'Internet, obtient seul le certificat HTTPS
+# Let's Encrypt pour ton domaine, puis transmet les requêtes à Spring Boot.
+# {$DOMAIN} est remplacé par la variable DOMAIN du fichier .env.
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# Les détails techniques de l'application ne sont pas publics,
+	# sauf le simple état de santé (utile pour une surveillance externe).
+	@actuator {
+		path /actuator/*
+		not path /actuator/health
+	}
+	respond @actuator 404
+
+	reverse_proxy app:8080
+}

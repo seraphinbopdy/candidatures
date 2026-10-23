@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Mes candidatures')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: entete}"></header>
+
+<main class="conteneur">
+
+    <p class="message" th:if="${message}" th:text="${message}">Message</p>
+
+    <!-- Les chiffres clés -->
+    <section class="stats" aria-label="Statistiques">
+        <div class="stat">
+            <span class="stat-valeur" th:text="${stats.total}">0</span>
+            <span class="stat-libelle">Candidatures</span>
+        </div>
+        <div class="stat">
+            <span class="stat-valeur" th:text="${stats.entretiens}">0</span>
+            <span class="stat-libelle">Entretiens</span>
+        </div>
+        <div class="stat">
+            <span class="stat-valeur" th:text="${stats.offres}">0</span>
+            <span class="stat-libelle">Offres</span>
+        </div>
+        <div class="stat stat-accent">
+            <span class="stat-valeur" th:text="${stats.tauxReponse} + ' %'">0 %</span>
+            <span class="stat-libelle">Taux de réponse</span>
+        </div>
+    </section>
+
+    <!-- Filtres et bouton d'ajout -->
+    <div class="barre">
+        <nav class="filtres" aria-label="Filtrer par statut">
+            <a th:href="@{/candidatures}" th:classappend="${statutFiltre == null} ? 'actif'">Toutes</a>
+            <a th:each="s : ${statuts}"
+               th:href="@{/candidatures(statut=${s})}"
+               th:classappend="${statutFiltre == s} ? 'actif'"
+               th:text="${s.libelle}">Statut</a>
+        </nav>
+        <a class="bouton" th:href="@{/candidatures/nouvelle}">+ Nouvelle candidature</a>
+    </div>
+
+    <div class="vide" th:if="${#lists.isEmpty(candidatures)}">
+        <p>Aucune candidature ici pour l'instant.</p>
+        <a th:href="@{/candidatures/nouvelle}">Ajouter la première</a>
+    </div>
+
+    <!-- La liste -->
+    <div class="tableau-cadre" th:unless="${#lists.isEmpty(candidatures)}">
+        <table class="tableau">
+            <thead>
+            <tr>
+                <th>Entreprise</th>
+                <th>Poste</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th class="colonne-actions">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${candidatures}">
+                <td>
+                    <span class="entreprise" th:text="${c.entreprise}">Entreprise</span>
+                    <a class="lien-offre" th:if="${!#strings.isEmpty(c.lienOffre)}"
+                       th:href="${c.lienOffre}" target="_blank" rel="noopener">Voir l'offre ↗</a>
+                    <span class="notes" th:if="${!#strings.isEmpty(c.notes)}" th:text="${c.notes}">Notes</span>
+                </td>
+                <td th:text="${c.poste}">Poste</td>
+                <td class="date" th:text="${#temporals.format(c.dateCandidature, 'dd/MM/yyyy')}">01/01/2026</td>
+                <td>
+                    <!-- Changer le statut d'un clic : le formulaire s'envoie dès qu'on choisit -->
+                    <form th:action="@{/candidatures/{id}/statut(id=${c.id})}" method="post">
+                        <select name="statut" aria-label="Changer le statut"
+                                th:class="'statut statut-' + ${#strings.toLowerCase(c.statut.name())}"
+                                onchange="this.form.submit()">
+                            <option th:each="s : ${statuts}" th:value="${s}"
+                                    th:selected="${s == c.statut}" th:text="${s.libelle}">Statut</option>
+                        </select>
+                    </form>
+                </td>
+                <td class="colonne-actions">
+                    <a class="action" th:href="@{/candidatures/{id}/modifier(id=${c.id})}">Modifier</a>
+                    <form class="formulaire-en-ligne" th:action="@{/candidatures/{id}/supprimer(id=${c.id})}"
+                          method="post" onsubmit="return confirm('Supprimer cette candidature ?');">
+                        <button type="submit" class="action action-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pied}"></footer>
+</body>
+</html>

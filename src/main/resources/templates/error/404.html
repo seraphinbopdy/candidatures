@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Page introuvable')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: entete}"></header>
+<main class="conteneur conteneur-etroit">
+    <div class="carte carte-centree">
+        <h1>Page introuvable</h1>
+        <p>Cette candidature n'existe pas ou a été supprimée.</p>
+        <a class="bouton" th:href="@{/candidatures}">Retour à la liste</a>
+    </div>
+</main>
+</body>
+</html>

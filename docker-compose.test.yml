@@ -1,0 +1,33 @@
+# Lance les tests Cucumber contre un VRAI PostgreSQL, sans rien installer d'autre que Docker.
+#
+#   docker compose -p candidatures-tests -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from tests
+#   docker compose -p candidatures-tests -f docker-compose.test.yml down -v
+#
+# Utilisé à l'identique en local et par Jenkins.
+
+services:
+  db-test:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: candidatures_test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    tmpfs:
+      - /var/lib/postgresql/data          # base jetable, en mémoire : rapide et toujours propre
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d candidatures_test"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  tests:
+    build:
+      context: .
+      target: test                        # l'étape "test" du Dockerfile : lance mvn verify
+    environment:
+      DB_URL: jdbc:postgresql://db-test:5432/candidatures_test
+      DB_USERNAME: test
+      DB_PASSWORD: test
+    depends_on:
+      db-test:
+        condition: service_healthy

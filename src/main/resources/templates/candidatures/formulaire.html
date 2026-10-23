@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Candidature')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: entete}"></header>
+
+<main class="conteneur conteneur-etroit">
+
+    <a class="retour" th:href="@{/candidatures}">← Retour à la liste</a>
+
+    <div class="carte">
+        <h1 th:text="${candidature.id == null} ? 'Nouvelle candidature' : 'Modifier la candidature'">Candidature</h1>
+
+        <!-- Même formulaire pour créer (POST /candidatures) et modifier (POST /candidatures/{id}) -->
+        <form th:object="${candidature}"
+              th:action="${candidature.id == null} ? @{/candidatures} : @{/candidatures/{id}(id=${candidature.id})}"
+              method="post" novalidate>
+
+            <div class="grille">
+                <div class="champ">
+                    <label for="entreprise">Entreprise *</label>
+                    <input type="text" th:field="*{entreprise}" th:errorclass="invalide" maxlength="100"
+                           placeholder="Ex. Capgemini">
+                    <p class="erreur" th:if="${#fields.hasErrors('entreprise')}" th:errors="*{entreprise}">Erreur</p>
+                </div>
+
+                <div class="champ">
+                    <label for="poste">Poste *</label>
+                    <input type="text" th:field="*{poste}" th:errorclass="invalide" maxlength="100"
+                           placeholder="Ex. Ingénieur DevOps">
+                    <p class="erreur" th:if="${#fields.hasErrors('poste')}" th:errors="*{poste}">Erreur</p>
+                </div>
+
+                <div class="champ">
+                    <label for="dateCandidature">Date de candidature *</label>
+                    <input type="date" th:field="*{dateCandidature}" th:errorclass="invalide">
+                    <p class="erreur" th:if="${#fields.hasErrors('dateCandidature')}" th:errors="*{dateCandidature}">Erreur</p>
+                </div>
+
+                <div class="champ">
+                    <label for="statut">Statut *</label>
+                    <select th:field="*{statut}" th:errorclass="invalide">
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s.libelle}">Statut</option>
+                    </select>
+                    <p class="erreur" th:if="${#fields.hasErrors('statut')}" th:errors="*{statut}">Erreur</p>
+                </div>
+            </div>
+
+            <div class="champ">
+                <label for="lienOffre">Lien de l'offre</label>
+                <input type="url" th:field="*{lienOffre}" th:errorclass="invalide" maxlength="500"
+                       placeholder="https://...">
+                <p class="erreur" th:if="${#fields.hasErrors('lienOffre')}" th:errors="*{lienOffre}">Erreur</p>
+            </div>
+
+            <div class="champ">
+                <label for="notes">Notes</label>
+                <textarea th:field="*{notes}" th:errorclass="invalide" rows="4" maxlength="2000"
+                          placeholder="Contact, date d'entretien, impressions..."></textarea>
+                <p class="erreur" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}">Erreur</p>
+            </div>
+
+            <div class="actions-formulaire">
+                <a class="bouton bouton-secondaire" th:href="@{/candidatures}">Annuler</a>
+                <button type="submit" class="bouton">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: pied}"></footer>
+</body>
+</html>

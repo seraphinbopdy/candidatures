@@ -1,0 +1,148 @@
+/* Suivi de candidatures — feuille de style unique, sans dépendance externe. */
+
+:root {
+    --fond: #f4f5f7;
+    --surface: #ffffff;
+    --encre: #1c2430;
+    --encre-douce: #5d6b7a;
+    --bordure: #e1e5ea;
+    --accent: #1f6f5c;
+    --accent-fonce: #175646;
+    --accent-pale: #e3f1ed;
+    --danger: #b3261e;
+    --rayon: 10px;
+
+    --envoyee: #4a5d73;   --envoyee-fond: #e9eef4;
+    --entretien: #8a5a00; --entretien-fond: #fdf1d8;
+    --offre: #1f6f3c;     --offre-fond: #dff3e6;
+    --refusee: #9b2c2c;   --refusee-fond: #fbe5e5;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--fond);
+    color: var(--encre);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+a { color: var(--accent); }
+
+/* ---------- En-tête ---------- */
+.entete { background: var(--encre); color: #fff; }
+.entete-contenu {
+    max-width: 1080px; margin: 0 auto; padding: 16px 24px;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+}
+.logo { color: #fff; text-decoration: none; font-weight: 700; font-size: 18px; }
+.logo-marque { color: #6fd0b5; margin-right: 6px; }
+.entete-sous-titre { color: #a9b4c0; font-size: 13px; }
+
+/* ---------- Mise en page ---------- */
+.conteneur { max-width: 1080px; margin: 0 auto; padding: 28px 24px 48px; }
+.conteneur-etroit { max-width: 760px; }
+.pied { text-align: center; color: var(--encre-douce); font-size: 12px; padding: 0 0 32px; }
+
+.message {
+    background: var(--accent-pale); color: var(--accent-fonce);
+    border-left: 4px solid var(--accent);
+    padding: 10px 14px; border-radius: 6px; margin: 0 0 20px;
+}
+
+/* ---------- Statistiques ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat {
+    background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon);
+    padding: 16px 18px; display: flex; flex-direction: column;
+}
+.stat-valeur { font-size: 28px; font-weight: 700; line-height: 1.1; }
+.stat-libelle { color: var(--encre-douce); font-size: 13px; margin-top: 4px; }
+.stat-accent { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stat-accent .stat-libelle { color: #d3ece5; }
+
+/* ---------- Filtres et boutons ---------- */
+.barre { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.filtres { display: flex; gap: 6px; flex-wrap: wrap; }
+.filtres a {
+    text-decoration: none; color: var(--encre-douce); font-size: 14px;
+    padding: 6px 14px; border-radius: 999px; border: 1px solid var(--bordure); background: var(--surface);
+}
+.filtres a:hover { border-color: var(--accent); color: var(--accent); }
+.filtres a.actif { background: var(--encre); border-color: var(--encre); color: #fff; }
+
+.bouton {
+    display: inline-block; background: var(--accent); color: #fff; border: none;
+    padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600;
+    text-decoration: none; cursor: pointer; font-family: inherit;
+}
+.bouton:hover { background: var(--accent-fonce); }
+.bouton-secondaire { background: transparent; color: var(--encre); border: 1px solid var(--bordure); }
+.bouton-secondaire:hover { background: var(--fond); }
+
+/* ---------- Tableau ---------- */
+.tableau-cadre { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); overflow-x: auto; }
+.tableau { width: 100%; border-collapse: collapse; }
+.tableau th {
+    text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .04em;
+    color: var(--encre-douce); padding: 12px 16px; border-bottom: 1px solid var(--bordure); background: #fafbfc;
+}
+.tableau td { padding: 14px 16px; border-bottom: 1px solid var(--bordure); vertical-align: top; }
+.tableau tr:last-child td { border-bottom: none; }
+.entreprise { font-weight: 600; display: block; }
+.lien-offre { font-size: 13px; }
+.notes { display: block; color: var(--encre-douce); font-size: 13px; margin-top: 4px; white-space: pre-line; }
+.date { white-space: nowrap; color: var(--encre-douce); }
+.colonne-actions { text-align: right; white-space: nowrap; }
+
+.statut {
+    border: none; border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+}
+.statut-envoyee { background: var(--envoyee-fond); color: var(--envoyee); }
+.statut-entretien { background: var(--entretien-fond); color: var(--entretien); }
+.statut-offre { background: var(--offre-fond); color: var(--offre); }
+.statut-refusee { background: var(--refusee-fond); color: var(--refusee); }
+
+.action {
+    background: none; border: none; padding: 0; margin-left: 14px; font-size: 14px;
+    color: var(--accent); cursor: pointer; text-decoration: none; font-family: inherit;
+}
+.action:hover { text-decoration: underline; }
+.action-danger { color: var(--danger); }
+.formulaire-en-ligne { display: inline; }
+
+.vide {
+    background: var(--surface); border: 1px dashed var(--bordure); border-radius: var(--rayon);
+    text-align: center; padding: 40px; color: var(--encre-douce);
+}
+.vide p { margin: 0 0 8px; }
+
+/* ---------- Formulaire ---------- */
+.retour { display: inline-block; margin-bottom: 16px; text-decoration: none; font-size: 14px; }
+.carte { background: var(--surface); border: 1px solid var(--bordure); border-radius: var(--rayon); padding: 28px; }
+.carte h1 { margin: 0 0 20px; font-size: 22px; }
+.carte-centree { text-align: center; }
+
+.grille { display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; }
+.champ { margin-bottom: 18px; }
+.champ label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.champ input, .champ select, .champ textarea {
+    width: 100%; padding: 9px 12px; font-size: 15px; font-family: inherit; color: var(--encre);
+    border: 1px solid var(--bordure); border-radius: 8px; background: #fff;
+}
+.champ input:focus, .champ select:focus, .champ textarea:focus {
+    outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-pale);
+}
+.champ .invalide { border-color: var(--danger); }
+.erreur { color: var(--danger); font-size: 13px; margin: 6px 0 0; }
+.actions-formulaire { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+/* ---------- Téléphone ---------- */
+@media (max-width: 720px) {
+    .stats { grid-template-columns: 1fr 1fr; }
+    .grille { grid-template-columns: 1fr; }
+    .conteneur { padding: 20px 16px 40px; }
+}
